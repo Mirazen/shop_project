@@ -1,0 +1,105 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <title>Товары</title>
+        <style>
+            .card {
+                border: 1px solid #000;
+                padding: 15px;
+                margin: 10px 0;
+            }
+            
+            .card.large-discount {
+                background-color: #2E8B57;
+            }
+            
+            .card.out-of-stock {
+                background-color: lightblue;
+            }
+            
+            .price-old {
+                text-decoration: line-through;
+                color: red;
+            }
+            
+            .price-new {
+                color: black;
+                font-weight: bold;
+            }
+            
+            .user-info {
+                position: absolute;
+                top: 10px;
+                right: 20px;
+                font-weight: bold;
+            }
+
+            .header {
+                padding: 10px;
+                border-bottom: 1px solid #ccc;
+                margin-bottom: 20px;
+            }
+
+            .products {
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <div class="user-info">{{ user_fio }}</div>
+            <a href="{% url 'logout' %}">Выйти</a>
+        </div>
+
+        <h1>Список товаров</h1>
+
+        <div class="products">
+            {% for product in products %}
+            <div class="card 
+                {% if product.has_large_discount %}large-discount{% endif %}
+                {% if product.is_stock_empty %}out-of-stock{% endif %}">
+                
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" width="200">
+                {% else %}
+                    <img src="{% static 'images/picture.png' %}" alt="Нет фото" width="200">
+                {% endif %}
+                
+                <h3>{{ product.name }}</h3>
+                <p><strong>Категория:</strong> {{ product.category.name }}</p>
+                <p><strong>Описание:</strong> {{ product.description }}</p>
+                <p><strong>Производитель:</strong> {{ product.manufacturer.name }}</p>
+                <p><strong>Поставщик:</strong> {{ product.supplier.name }}</p>
+
+                <div class="price">
+                    {% if product.has_discount %}
+                        <span class="price-old">{{ product.price }}р</span>
+                        <span class="price-new">{{ product.get_discount_price }}р</span>
+                    {% else %}
+                        <span class="price-new">{{ product.price }}р</span>
+                    {% endif %}
+                </div>
+
+                <p><strong>Ед. измерения:</strong> {{ product.get_unit_display }}</p>
+                <p><strong>На складе:</strong> {{ product.stock_quantity }}</p>
+                <p><strong>Скидка:</strong> {{ product.discount }}%</p>
+                {% if user.is_authenticated %}
+                    {% if user.role == 'admin' %}
+                        <button>Редактировать товар</button>
+                        <button>Удалить товар</button>
+                    {% elif user.role == 'manager' %}
+                        <button>Редактировать цену</button>
+                        <button>Изменить количество</button>
+                    {% elif user.role == 'client' %}
+                        <button>Добавить в корзину</button>
+                    {% endif %}
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </body>
+</html>
