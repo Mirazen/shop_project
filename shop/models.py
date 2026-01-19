@@ -81,7 +81,7 @@ class Product(models.Model):
         max_digits=10,
         decimal_places=2,
     )
-    discount = models.ImageField(default=0)
+    discount = models.IntegerField(default=0)
     unit = models.CharField(
         max_length=10,
         choices=UNITS,
