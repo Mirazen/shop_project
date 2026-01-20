@@ -8,11 +8,20 @@ class User(AbstractUser):
         ('manager', 'Менеджер'),
         ('admin', 'Администратор'),
     ]
+    username = None
+    date_joined = None
+    last_login = None
+    first_name = None
+    last_name = None
+    email = models.EmailField(unique=True, verbose_name='Email')
     role = models.CharField(max_length=20, choices=ROLES, default='client')
-    third_name = models.CharField(max_length=100, blank=True, verbose_name='Отчество')
+    full_name = models.CharField(max_length=100, blank=True, verbose_name='ФИО')
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
     
     def get_full_name(self):
-        return f"{self.last_name} {self.first_name} {self.third_name}"
+        return f"{self.last_name} {self.first_name} {self.third_name}"  
     
     class Meta:
         verbose_name = 'Пользователь'
