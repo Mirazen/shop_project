@@ -5,16 +5,11 @@
 git clone <https://github.com/Mirazen/shop_project.git>
 cd <shop_project>
 ```
-## 2. Создание виртуального окружения
+## 2. Установка зависимостей
 ```bash
-pip install uv
-uv venv
+pip install -r requirements.txt
 ```
-## 3. Установка зависимостей
-```bash
-uv run pip install -r requirements.txt
-```
-## 4. Настройка базы данных
+## 3. Настройка базы данных
 Создай базу данных в PostgreSQL:
 ```bash
 CREATE DATABASE shop_db;
@@ -24,7 +19,7 @@ CREATE DATABASE shop_db;
 python manage.py migrate
 python manage.py loaddata data.json
 ```
-## 5. Запуск сервера
+## 4. Запуск сервера
 ```bash
-uv run manage.py runserver
+python manage.py runserver
 ```
